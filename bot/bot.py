@@ -67,7 +67,7 @@ class Bot(TelegramClient):
     def execute(self, message):
         command = message.message[1:]
         try:
-            getattr(self, command)(message)
+            getattr(self, 'cmd_' + command)(message)
         except (AttributeError, TypeError):
             pass
 
