@@ -5,7 +5,6 @@ from telethon.tl.functions.channels import (
     GetMessagesRequest
 )
 from telethon.tl.types import (
-    InputPeerChannel,
     UpdateEditChannelMessage,
     UpdateNewChannelMessage,
     UpdatesTg
@@ -29,8 +28,7 @@ class Bot(TelegramClient):
 
     def init_channels(self, ids):
         entities = self.get_dialogs(limit=0)[1]
-        return {e.id: InputPeerChannel(e.id, e.access_hash)
-                for e in entities if str(e.id) in ids}
+        return {e.id: e for e in entities if str(e.id) in ids}
 
     def in_watched_channels(self, message):
         return message.to_id.channel_id in self.channels
