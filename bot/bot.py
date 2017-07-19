@@ -58,6 +58,9 @@ class Bot(TelegramClient):
             GetMessagesRequest(self.channels[channel_id], [message_id])
         ).messages[0]
 
+    def is_reply(self, message):
+        return message.reply_to_msg_id
+
     def get_replied_message(self, message):
         return self.get_message(message.to_id.channel_id,
                                 message.reply_to_msg_id)
