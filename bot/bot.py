@@ -63,11 +63,12 @@ class Bot(TelegramClient):
                                 message.reply_to_msg_id)
 
     def execute(self, message):
-        command = message.message[1:]
         try:
-            getattr(self, 'cmd_' + command)(message)
-        except (AttributeError, TypeError):
+            cmd_function = getattr(self, 'cmd_' + message.message[1:])
+        except (AttributeError):
             pass
+        else:
+            cmd_function(message)
 
     def update_handler(self, update):
         if isinstance(update, UpdatesTg):
