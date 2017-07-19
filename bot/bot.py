@@ -42,6 +42,10 @@ class Bot(TelegramClient):
     def is_forwarded(message):
         return message.fwd_from
 
+    @staticmethod
+    def is_reply(message):
+        return message.reply_to_msg_id
+
     def get_fresh_messages(self, update):
         return [u.message for u in update.updates
                 if self.update_contains_message(u)
@@ -49,17 +53,14 @@ class Bot(TelegramClient):
                 and not self.is_forwarded(u.message)]
 
     def delete_message(self, channel_id, message_id):
-        return self(
-            DeleteMessagesRequest(self.channels[channel_id], [message_id])
+        request = DeleteMessagesRequest(
+            self.channels[channel_id], [message_id]
         )
+        return self(request)
 
     def get_message(self, channel_id, message_id):
-        return self(
-            GetMessagesRequest(self.channels[channel_id], [message_id])
-        ).messages[0]
-
-    def is_reply(self, message):
-        return message.reply_to_msg_id
+        request = GetMessagesRequest(self.channels[channel_id], [message_id])
+        return self(request).messages[0]
 
     def get_replied_message(self, message):
         return self.get_message(message.to_id.channel_id,
@@ -68,7 +69,7 @@ class Bot(TelegramClient):
     def execute(self, message):
         try:
             cmd_function = getattr(self, 'cmd_' + message.message[1:])
-        except (AttributeError):
+        except AttributeError:
             pass
         else:
             cmd_function(message)
