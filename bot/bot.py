@@ -40,7 +40,10 @@ class Bot(TelegramClient):
 
     @staticmethod
     def is_forwarded(message):
-        return message.fwd_from
+        try:
+            message.fwd_from
+        except AttributeError:
+            pass
 
     @staticmethod
     def is_reply(message):
