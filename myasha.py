@@ -1,17 +1,17 @@
 # coding=utf-8
 
-import configparser
 import time
+
+import yaml
 
 from bouncerbot import BouncerBot
 
-CONFIG = 'myasha.ini'
+CONFIG = 'config.yaml'
 
 
-def read_config(file):
-    """Read config section from file"""
-    config = configparser.ConfigParser()
-    config.read(file)
+def read_config(filename):
+    with open(filename, 'r') as file:
+        config = yaml.load(file)
     return config
 
 

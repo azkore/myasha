@@ -17,7 +17,7 @@ class Bot(TelegramClient):
                          config['api_id'],
                          config['api_hash'])
         self.login(config['phone'])
-        self.channels = self.init_channels(config['channel_ids'].split(','))
+        self.channels = self.init_channels(config['channel_ids'])
         self.add_update_handler(self.update_handler)
 
     def login(self, phone):
@@ -28,7 +28,7 @@ class Bot(TelegramClient):
 
     def init_channels(self, ids):
         entities = self.get_dialogs(limit=0)[1]
-        return {e.id: e for e in entities if str(e.id) in ids}
+        return {e.id: e for e in entities if e.id in ids}
 
     def in_watched_channels(self, message):
         return message.to_id.channel_id in self.channels

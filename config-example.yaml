@@ -1,0 +1,8 @@
+bot:
+  api_id: xxxxx
+  api_hash: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  phone: +xxxxxxxxxxx
+  session: bot_name
+  channel_ids:
+  - xxxxxxxxxx
+  - xxxxxxxxxx
