@@ -1,11 +1,15 @@
 # coding=utf-8
+from datetime import timedelta
+
 from telethon import TelegramClient
 from telethon.tl.functions.channels import (
     DeleteMessagesRequest,
-    GetMessagesRequest
+    GetAdminLogRequest,
+    GetMessagesRequest,
 )
 from telethon.tl.types import (
-    UpdatesTg
+    ChannelAdminLogEventsFilter,
+    UpdatesTg,
 )
 
 
@@ -13,7 +17,8 @@ class Bot(TelegramClient):
     def __init__(self, config):
         super().__init__(config['session'],
                          config['api_id'],
-                         config['api_hash'])
+                         config['api_hash'],
+                         timeout=timedelta(seconds=config['timeout']))
         self.login(config['phone'])
         self.channels = self.init_channels(config['channel_ids'])
         self.add_update_handler(self.update_handler)
@@ -80,6 +85,20 @@ class Bot(TelegramClient):
     def get_replied_message(self, message):
         return self.get_message(message.to_id.channel_id,
                                 message.reply_to_msg_id)
+
+    def get_admin_log(self, channel, min_id=0, events=None):
+        events = {e: True for e in events} if events else {}
+        request = GetAdminLogRequest(
+            channel, '', 0, min_id, 0,
+            admins=[],
+            events_filter=ChannelAdminLogEventsFilter(**events)
+        )
+        # fixme: think about timeout handling in general: redefine __call__?
+        try:
+            return self(request)
+        except TimeoutError:
+            print("TIMEOUT!!!")
+            return None
 
     def execute(self, message):
         try:
