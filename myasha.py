@@ -1,10 +1,7 @@
 # coding=utf-8
-
-import time
-
 import yaml
 
-from bouncerbot import BouncerBot
+from heraldbot import HeraldBot
 
 CONFIG = 'config.yaml'
 
@@ -18,9 +15,7 @@ def read_config(filename):
 def run():
     config = read_config(CONFIG)
 
-    BouncerBot(config)
-    while True:
-        time.sleep(1)
+    HeraldBot(config)
 
 
 if __name__ == "__main__":

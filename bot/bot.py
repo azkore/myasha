@@ -19,7 +19,7 @@ class Bot(TelegramClient):
                          config['api_id'],
                          config['api_hash'],
                          timeout=timedelta(seconds=config['timeout']))
-        self.login(config['phone'])
+        self.login(str(config['phone']))
         self.channels = self.init_channels(config['channel_ids'])
         self.add_update_handler(self.update_handler)
 
