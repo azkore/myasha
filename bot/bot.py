@@ -50,6 +50,17 @@ class Bot(TelegramClient):
     def is_reply(message):
         return message.reply_to_msg_id
 
+    @staticmethod
+    def get_name(user):
+        first = user.first_name
+        last = user.last_name
+        return first if not last else last if not first else first + ' ' + last
+
+    @classmethod
+    def get_full_name(cls, user):
+        full = cls.get_name(user)
+        return full + " [@%s]" % user.username if user.username else full
+
     def get_fresh_text_messages(self, update):
         return [u.message for u in update.updates
                 if self.update_contains_text_message(u)
