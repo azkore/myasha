@@ -5,8 +5,6 @@ from telethon.tl.functions.channels import (
     GetMessagesRequest
 )
 from telethon.tl.types import (
-    UpdateEditChannelMessage,
-    UpdateNewChannelMessage,
     UpdatesTg
 )
 
@@ -34,9 +32,12 @@ class Bot(TelegramClient):
         return message.to_id.channel_id in self.channels
 
     @staticmethod
-    def update_contains_message(update):
-        return isinstance(update, (UpdateNewChannelMessage,
-                                   UpdateEditChannelMessage))
+    def update_contains_text_message(update):
+        try:
+            if update.message.message:
+                return True
+        except AttributeError:
+            return False
 
     @staticmethod
     def is_forwarded(message):
@@ -49,9 +50,9 @@ class Bot(TelegramClient):
     def is_reply(message):
         return message.reply_to_msg_id
 
-    def get_fresh_messages(self, update):
+    def get_fresh_text_messages(self, update):
         return [u.message for u in update.updates
-                if self.update_contains_message(u)
+                if self.update_contains_text_message(u)
                 and self.in_watched_channels(u.message)
                 and not self.is_forwarded(u.message)]
 
@@ -79,6 +80,6 @@ class Bot(TelegramClient):
 
     def update_handler(self, update):
         if isinstance(update, UpdatesTg):
-            for message in self.get_fresh_messages(update):
+            for message in self.get_fresh_text_messages(update):
                 if message.message.startswith('/'):
                     self.execute(message)
