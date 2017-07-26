@@ -34,7 +34,10 @@ class Bot(TelegramClient):
         return {e.id: e for e in entities if e.id in ids}
 
     def in_watched_channels(self, message):
-        return message.to_id.channel_id in self.channels
+        try:
+            return message.to_id.channel_id in self.channels
+        except AttributeError:
+            return False
 
     @staticmethod
     def update_contains_text_message(update):
